@@ -3,20 +3,11 @@
 
   let location;
 
-  onMount(() => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(showPosition);
-    } else {
-      location = "Geolocation is not supported by this browser.";
-    }
-    console.log(location);
-  });
-
   const showPosition = position => {
     location =
       "Latitude: " +
       position.coords.latitude +
-      "<br>Longitude: " +
+      "\nLongitude: " +
       position.coords.longitude;
   };
 
@@ -48,5 +39,5 @@
   <img id="output" alt="imageu"/>
   <hr>
   <button on:click={() => getLocation()}>Get location</button>
-  <div>{location}</div>
+  <div style="white-space: pre-line">{location}</div>
 </main>
