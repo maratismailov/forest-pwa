@@ -83,3 +83,7 @@ h1 {
 		max-width: none;
 	}
 }
+
+img {
+	width: 25vw;
+}
