@@ -12,7 +12,7 @@
     console.log(location);
   });
 
-  const showPosition = () => {
+  const showPosition = position => {
     location =
       "Latitude: " +
       position.coords.latitude +
@@ -27,6 +27,15 @@
       URL.revokeObjectURL(output.src) // free memory
     }
   };
+
+  const getLocation = () => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    location = "Geolocation is not supported by this browser.";
+  }
+}
+
 </script>
 
 <style>
@@ -35,6 +44,9 @@
 
 <main>
   <input type="file" accept="image/*" capture on:change={event => loadFile(event)} />
-  <img id="output" alt="image"/>
+  <hr>
+  <img id="output" alt="imageu"/>
+  <hr>
+  <button on:click={() => getLocation()}>Get location</button>
   <div>{location}</div>
 </main>
