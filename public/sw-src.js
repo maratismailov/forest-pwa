@@ -5,12 +5,40 @@ if (workbox) {
 
     workbox.precaching.precacheAndRoute(self.__WB_MANIFEST);
     workbox.routing.registerRoute(
-        new RegExp('https://fonts.(?:googleapis|gstatic).com/(.*)'),
-        new workbox.strategies.CacheFirst({
-            cacheName: 'google-fonts',
+        new RegExp('virtualearth.net/tiles/'),
+        new workbox.strategies.StaleWhileRevalidate({
+            cacheName: 'bing-maps',
             plugins: [
                 new workbox.expiration.ExpirationPlugin({
-                    maxEntries: 30,
+                    maxEntries: 300,
+                }),
+                new workbox.cacheableResponse.CacheableResponsePlugin({
+                    statuses: [0, 200]
+                }),
+            ],
+        }),
+    );
+    workbox.routing.registerRoute(
+        new RegExp('https://dev.virtualearth.net/'),
+        new workbox.strategies.NetworkFirst({
+            cacheName: 'bing-maps-metadata',
+            plugins: [
+                new workbox.expiration.ExpirationPlugin({
+                    maxEntries: 300,
+                }),
+                new workbox.cacheableResponse.CacheableResponsePlugin({
+                    statuses: [0, 200]
+                }),
+            ],
+        }),
+    );
+    workbox.routing.registerRoute(
+        new RegExp('https://gd.caiag.kg'),
+        new workbox.strategies.NetworkFirst({
+            cacheName: 'gd.caiag.kg',
+            plugins: [
+                new workbox.expiration.ExpirationPlugin({
+                    maxEntries: 300,
                 }),
                 new workbox.cacheableResponse.CacheableResponsePlugin({
                     statuses: [0, 200]

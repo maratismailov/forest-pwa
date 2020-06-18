@@ -15,10 +15,13 @@
   let standsdata = [];
   let currentstand;
   let selected = "";
-  let area = ''
-  let area_id = 0
-  let multi_json;
+  let area = "";
+  let area_id = 0;
+  let multi_json = 0;
+  let multi_json_string;
+  let polygon;
   let id;
+  let bing;
   const api_key =
     "AijiWK2E56tAWqQiXj0TpzHR4V0xb0wDyCUzeUIqjbuPuwoFPP2kiWNi6TUVMpBn";
 
@@ -31,89 +34,89 @@
       }
     };
     createMap();
-    L.NewPolygonControl = L.Control.extend({
-      options: {
-        position: "topleft"
-      },
+    // L.NewPolygonControl = L.Control.extend({
+    //   options: {
+    //     position: "topleft"
+    //   },
 
-      onAdd: function(map) {
-        var container = L.DomUtil.create("div", "leaflet-control leaflet-bar"),
-          link = L.DomUtil.create("a", "", container);
+    //   onAdd: function(map) {
+    //     var container = L.DomUtil.create("div", "leaflet-control leaflet-bar"),
+    //       link = L.DomUtil.create("a", "", container);
 
-        link.href = "#";
-        link.title = "Create a new polygon";
-        link.innerHTML = "▱";
-        L.DomEvent.on(link, "click", L.DomEvent.stop).on(
-          link,
-          "click",
-          function() {
-            map.editTools.startPolygon();
-          }
-        );
-        container.style.display = "block";
-        map.editTools.on("editable:enabled", function(e) {
-          container.style.display = "none";
-        });
-        map.editTools.on("editable:disable", function(e) {
-          container.style.display = "block";
-        });
-        return container;
-      }
-    });
-    L.AddPolygonShapeControl = L.Control.extend({
-      options: {
-        position: "topleft"
-      },
+    //     link.href = "#";
+    //     link.title = "Create a new polygon";
+    //     link.innerHTML = "▱";
+    //     L.DomEvent.on(link, "click", L.DomEvent.stop).on(
+    //       link,
+    //       "click",
+    //       function() {
+    //         map.editTools.startPolygon();
+    //       }
+    //     );
+    //     container.style.display = "block";
+    //     map.editTools.on("editable:enabled", function(e) {
+    //       container.style.display = "none";
+    //     });
+    //     map.editTools.on("editable:disable", function(e) {
+    //       container.style.display = "block";
+    //     });
+    //     return container;
+    //   }
+    // });
+    // L.AddPolygonShapeControl = L.Control.extend({
+    //   options: {
+    //     position: "topleft"
+    //   },
 
-      onAdd: function(map) {
-        var container = L.DomUtil.create("div", "leaflet-control leaflet-bar"),
-          link = L.DomUtil.create("a", "", container);
+    //   onAdd: function(map) {
+    //     var container = L.DomUtil.create("div", "leaflet-control leaflet-bar"),
+    //       link = L.DomUtil.create("a", "", container);
 
-        link.href = "#";
-        link.title = "Create a new polygon";
-        link.innerHTML = "▱▱";
-        L.DomEvent.on(link, "click", L.DomEvent.stop).on(
-          link,
-          "click",
-          function() {
-            if (!map.editTools.currentPolygon) return;
-            map.editTools.currentPolygon.editor.newShape();
-          }
-        );
-        container.style.display = "none";
-        map.editTools.on("editable:enabled", function(e) {
-          container.style.display = "block";
-        });
-        map.editTools.on("editable:disable", function(e) {
-          container.style.display = "none";
-        });
+    //     link.href = "#";
+    //     link.title = "Create a new polygon";
+    //     link.innerHTML = "▱▱";
+    //     L.DomEvent.on(link, "click", L.DomEvent.stop).on(
+    //       link,
+    //       "click",
+    //       function() {
+    //         if (!map.editTools.currentPolygon) return;
+    //         map.editTools.currentPolygon.editor.newShape();
+    //       }
+    //     );
+    //     container.style.display = "none";
+    //     map.editTools.on("editable:enabled", function(e) {
+    //       container.style.display = "block";
+    //     });
+    //     map.editTools.on("editable:disable", function(e) {
+    //       container.style.display = "none";
+    //     });
 
-        return container;
-      }
-    });
+    //     return container;
+    //   }
+    // });
 
-    map.addControl(new L.NewPolygonControl());
-    map.addControl(new L.AddPolygonShapeControl());
-    map.on("layeradd", function(e) {
-      if (e.layer instanceof L.Polygon)
-        e.layer
-          .on("dblclick", L.DomEvent.stop)
-          .on("dblclick", e.layer.toggleEdit);
-    });
-    map.on("layerremove", function(e) {
-      if (e.layer instanceof L.Polygon)
-        e.layer
-          .off("dblclick", L.DomEvent.stop)
-          .off("dblclick", e.layer.toggleEdit);
-    });
-    map.editTools.on("editable:enable", function(e) {
-      if (this.currentPolygon) this.currentPolygon.disableEdit();
-      this.currentPolygon = e.layer;
-      this.fire("editable:enabled");
-    });
-    map.editTools.on("editable:disable", function(e) {
-      delete this.currentPolygon;
-    });
+    // map.addControl(new L.NewPolygonControl());
+    // map.addControl(new L.AddPolygonShapeControl());
+    // map.on("layeradd", function(e) {
+    //   if (e.layer instanceof L.Polygon)
+    //     e.layer
+    //       .on("dblclick", L.DomEvent.stop)
+    //       .on("dblclick", e.layer.toggleEdit);
+    // });
+    // map.on("layerremove", function(e) {
+    //   if (e.layer instanceof L.Polygon)
+    //     e.layer
+    //       .off("dblclick", L.DomEvent.stop)
+    //       .off("dblclick", e.layer.toggleEdit);
+    // });
+    // map.editTools.on("editable:enable", function(e) {
+    //   if (this.currentPolygon) this.currentPolygon.disableEdit();
+    //   this.currentPolygon = e.layer;
+    //   this.fire("editable:enabled");
+    // });
+    // map.editTools.on("editable:disable", function(e) {
+    //   delete this.currentPolygon;
+    // });
 
     axios.get("https://gd.caiag.kg/forestpwagetstands").then(response => {
       const pre_data = response.data;
@@ -131,7 +134,7 @@
     map = L.map("map", {
       editable: true
     }).setView(center, zoom);
-    const bing = new L.BingLayer(api_key);
+    bing = new L.BingLayer(api_key);
     map.addLayer(bing);
   };
 
@@ -140,9 +143,7 @@
   };
 
   const refineData = data => {
-
     standsdata = data.map(elem => {
-      console.log(elem)
       return {
         id: elem[0],
         area: JSON.parse(elem[1]),
@@ -154,28 +155,12 @@
   };
 
   const handle_select = () => {
-    id = selected.id
-    // var multi = L.polygon([
-    //   [
-    //     [
-    //       [43.1239, 1.244],
-    //       [43.123, 1.253],
-    //       [43.1252, 1.255],
-    //       [43.125, 1.251],
-    //       [43.1239, 1.244]
-    //     ],
-    //     [[43.124, 1.246], [43.1236, 1.248], [43.12475, 1.25]],
-    //     [[43.124, 1.251], [43.1236, 1.253], [43.12475, 1.254]]
-    //   ],
-    //   [[[43.1269, 1.246], [43.126, 1.252], [43.1282, 1.255], [43.128, 1.245]]]
-    // ]).addTo(map);
-    // map.fitBounds(multi.getBounds());
-    // multi.enableEdit();
-
+    id = selected.id;
     console.log(selected);
     area = L.geoJSON(selected.area).addTo(map);
-    area_id = area._leaflet_id
-    console.log(area_id)
+    multi_json = area.toGeoJSON();
+    area_id = area._leaflet_id;
+    console.log(area_id);
     // let multi = area.addTo(map);
     // map.setView([42.87, 74.594], 5)
     map.fitBounds(area.getBounds());
@@ -188,16 +173,70 @@
     // geo.getLayers().forEach(l => l.enableEdit())
   };
   const refresh_area = () => {
-    area = area
-    multi_json = JSON.stringify(area.toGeoJSON().features[0].geometry)
-    // multi_json = JSON.stringify(area.toGeoJSON())
-    // multi_json = `"{"type":"MultiPolygon","coordinates":[[[[73.6080423093854,40.9031889211661],[73.6080491542851,40.9031985718277],[73.60810966006,40.9032319486259],[73.6083723570599,40.9032472401287],[73.6088357437687,40.9032804444176],[73.6091020723693,40.9032994361655],[73.6093924580782,40.9033386984018],[73.6095292258252,40.9033268512584],[73.6095997170215,40.9032914068196],[73.6096919289181,40.9031583008782],[73.6100210439812,40.9029090388043],[73.6104359438997,40.9026729165784],[73.6107533848054,40.9025900965791],[73.6111391560585,40.9025742319935],[73.6115528798881,40.9025874073581],[73.6118850208436,40.9026167577287],[73.6120420056247,40.9024022669173],[73.6119171131475,40.9023259029403],[73.6116356647473,40.9022147182191],[73.6114877366345,40.9021929463547],[73.6112901468683,40.9021688841074],[73.6105832529729,40.9023193016028],[73.6096549913538,40.9024999511465],[73.6091470444447,40.902644894773],[73.6090406747354,40.9026754013972],[73.6082547589697,40.9029661049602],[73.6080703497972,40.9030907735845],[73.6080282496724,40.9031696157854],[73.6080423093854,40.9031889211661]]]]}"`
-    console.log(multi_json)
-    axios.post("https://gd.caiag.kg/forestpwawritemultipoly?geojson=" + `'` + multi_json + `'` + '&id=' + id).then(response => {
-      const pre_data = response.data;
-    });
+    console.log(area.toGeoJSON());
+    console.log(polygon.toGeoJSON());
+    area = area;
+  };
 
+  const add_to_current = () => {
+    area._layers[area_id - 1]._latlngs[0].push(polygon._latlngs[0]);
+  };
+
+  const save_changes = () => {
+    multi_json = area.toGeoJSON();
+    multi_json_string = JSON.stringify(multi_json.features[0].geometry);
+    axios.post(
+      "https://gd.caiag.kg/forestpwawritemultipoly?geojson=" +
+        `'` +
+        multi_json_string +
+        `'` +
+        "&id=" +
+        id
+    );
+  };
+
+  const start_polygon = () => {
+    polygon = 0;
+    polygon = map.editTools.startPolygon();
+  };
+
+  const show_map_object = () => {
+    console.log(polygon.toGeoJSON());
+  };
+
+  const stop_drawing = () => {
+    map.editTools.stopDrawing();
+  };
+
+  const show_url = () => {
+    Object.entries(bing._tiles).forEach(elem => {
+      console.log(elem[1].el.getAttribute("src"))
+    })
+    // console.log(bing._tiles)
   }
+
+
+// In your web app's JavaScript:
+
+async function add_to_cache() {
+  const urls = Object.entries(bing._tiles).map(elem => {
+      return elem[1].el.getAttribute("src")
+    })
+  const myCache = await window.caches.open('bing-maps');
+  await myCache.addAll(urls);
+}
+// caches.open('v1').then(function(cache) {
+//   cache.matchAll('/images/').then(function(response) {
+//     response.forEach(function(element, index, array) {
+//       cache.delete(element);
+//     });
+//   });
+// })
+// Call addToCache whenever you'd like. E.g. to add to cache after a page load:
+// window.addEventListener('load', () => {
+//   // ...do something to determine the list of related URLs for the current page...
+//   addToCache(['/static/relatedUrl1', '/static/relatedUrl2']);
+// });
 </script>
 
 <style>
@@ -215,15 +254,26 @@
 
 <br />
 
-<p>Выберите выдел</p>
+<span>Выберите выдел</span>
 
 <select bind:value={selected} on:change={handle_select}>
   {#each standsdata as stand}
     <option value={stand}>{stand.id}</option>
   {/each}
 </select>
+<br />
 
-<button on:click={refresh_area}>Refresh Selected</button>
+<button class="action" on:click={refresh_area}>Refresh Selected</button>
+<button class="action" on:click={save_changes}>Save changes</button>
+<button class="action" on:click={show_map_object}>Show L.map</button>
+<br />
+<button class="action" on:click={start_polygon}>Start Polygon</button>
+<button class="action" on:click={stop_drawing}>Stop drawing</button>
+<button class="action" on:click={add_to_current}>Add to current</button>
+<br />
+<button class="action" on:click={show_url}>Show url</button>
+<button class="action" on:click={add_to_cache}>Add to cache</button>
+
 
 {#if area != ''}
   {#each area._layers[area_id - 1]._latlngs[0][0] as coordinate, index}

@@ -11,20 +11,20 @@
 
 <main>
   <div class="scrollmenu">
-    <a href="/" use:active exact>Photo</a>
+    <a href="/" use:active exact>Map</a>
     <a href="/location" use:active exact>Location</a>
-    <a href="/map" use:active exact>Map</a>
+    <a href="/photo" use:active exact>Photo</a>
   </div>
 
 </main>
 
-<Route path="/">
+<Route path="/photo">
   <Photo />
 </Route>
 <Route path="/location">
   <Location />
 </Route>
-<Route path="/map">
+<Route path="/">
   <Map />
 </Route>
 <!-- <Route path="/currentdustazure">
